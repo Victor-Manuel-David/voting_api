@@ -150,7 +150,7 @@ CREATE TABLE votes (
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Victor-Manuel-David/voting-api.git
+git clone https://github.com/Victor-Manuel-David/voting_api.git
 cd voting-api
 ```
 
@@ -188,7 +188,7 @@ Create a `.env` file in the root folder and add the following configuration:
 
 ```env
 DB_HOST=localhost
-DB_PORT=5432
+DB_PORT=5433
 DB_NAME=voting_db
 DB_USER=postgres
 DB_PASSWORD=your_password
