@@ -2,10 +2,10 @@ from typing import List
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from app import crud, schemas
 from app.database import get_db
-
-from app.auth import verify_token
+from app.core.security import verify_token
+from app.voters import service
+from app.voters.schema import VoterCreate, VoterResponse
 
 router = APIRouter(
     prefix="/voters",
@@ -14,12 +14,12 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=schemas.VoterResponse, status_code=201)
-def create_voter(voter: schemas.VoterCreate, db: Session = Depends(get_db)):
-    return crud.create_voter(db, voter)
+@router.post("/", response_model=VoterResponse, status_code=201)
+def create_voter(voter: VoterCreate, db: Session = Depends(get_db)):
+    return service.create_voter(db, voter)
 
 
-@router.get("/", response_model=List[schemas.VoterResponse])
+@router.get("/", response_model=List[VoterResponse])
 def get_voters(
     skip: int = Query(0, ge=0, description="Number of records to skip"),
     limit: int = Query(10, ge=1, le=100, description="Maximum number of records to return"),
@@ -28,7 +28,7 @@ def get_voters(
     has_voted: bool | None = Query(None, description="Filter voters by voting status"),
     db: Session = Depends(get_db)
 ):
-    return crud.get_voters(
+    return service.get_voters(
         db=db,
         skip=skip,
         limit=limit,
@@ -38,11 +38,11 @@ def get_voters(
     )
 
 
-@router.get("/{voter_id}", response_model=schemas.VoterResponse)
+@router.get("/{voter_id}", response_model=VoterResponse)
 def get_voter_by_id(voter_id: int, db: Session = Depends(get_db)):
-    return crud.get_voter_by_id(db, voter_id)
+    return service.get_voter_by_id(db, voter_id)
 
 
 @router.delete("/{voter_id}")
 def delete_voter(voter_id: int, db: Session = Depends(get_db)):
-    return crud.delete_voter(db, voter_id)
+    return service.delete_voter(db, voter_id)
