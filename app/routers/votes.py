@@ -8,8 +8,8 @@ from app.database import get_db
 from app.auth import verify_token
 
 router = APIRouter(
-    prefix="/candidates",
-    tags=["Candidates"],
+    prefix="/votes",
+    tags=["Votes"],
     dependencies=[Depends(verify_token)]
 )
 
