@@ -42,29 +42,51 @@ This project allows the registration of voters and candidates, vote casting, vot
 - Automatically increase the candidate vote count.
 - Protect endpoints using JWT authentication.
 - API documentation with Swagger.
+- Modular architecture by entity.
 
 ---
 
 ## Project Structure
 
+The project follows a modular architecture organized by main entities. Each module contains its own model, schema, router and service layer.
+
 ```text
 voting_api/
 │
 ├── app/
-│   ├── routers/
+│   ├── auth/
 │   │   ├── __init__.py
-│   │   ├── auth.py
-│   │   ├── candidates.py
-│   │   ├── voters.py
-│   │   └── vote.py
+│   │   ├── router.py
+│   │   └── service.py
+│   │
+│   ├── candidates/
+│   │   ├── __init__.py
+│   │   ├── model.py
+│   │   ├── router.py
+│   │   ├── schema.py
+│   │   └── service.py
+│   │
+│   ├── core/
+│   │   ├── __init__.py
+│   │   └── security.py
+│   │
+│   ├── voters/
+│   │   ├── __init__.py
+│   │   ├── model.py
+│   │   ├── router.py
+│   │   ├── schema.py
+│   │   └── service.py
+│   │
+│   ├── votes/
+│   │   ├── __init__.py
+│   │   ├── model.py
+│   │   ├── router.py
+│   │   ├── schema.py
+│   │   └── service.py
 │   │
 │   ├── __init__.py
-│   ├── auth.py
-│   ├── crud.py
 │   ├── database.py
-│   ├── main.py
-│   ├── models.py
-│   └── schemas.py
+│   └── main.py
 │
 ├── venv/
 ├── .env
@@ -72,6 +94,35 @@ voting_api/
 ├── README.md
 └── requirements.txt
 ```
+
+---
+
+## Architecture
+
+The API was organized using a modular structure by domain/entity. Each main entity has its own folder containing the files related to that specific domain.
+
+### Module Responsibilities
+
+| File | Responsibility |
+|---|---|
+| `model.py` | Defines the SQLAlchemy database model for the entity |
+| `schema.py` | Defines the Pydantic schemas used for request and response validation |
+| `router.py` | Defines the API endpoints for the entity |
+| `service.py` | Contains the business logic and database operations for the entity |
+
+### General Layers
+
+| Layer | Description |
+|---|---|
+| `main.py` | Application entry point and router registration |
+| `database.py` | PostgreSQL database connection and session management |
+| `core/security.py` | JWT token generation and validation |
+| `auth/` | Authentication module |
+| `voters/` | Voter module |
+| `candidates/` | Candidate module |
+| `votes/` | Vote module |
+
+This structure improves maintainability because each entity keeps its own logic, schemas, routes and database model in the same module.
 
 ---
 
@@ -150,9 +201,11 @@ CREATE TABLE votes (
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Victor-Manuel-David/voting_api.git
+git clone https://github.com/YOUR_USERNAME/voting-api.git
 cd voting-api
 ```
+
+Replace `YOUR_USERNAME` with your GitHub username.
 
 ---
 
@@ -188,12 +241,12 @@ Create a `.env` file in the root folder and add the following configuration:
 
 ```env
 DB_HOST=localhost
-DB_PORT=5433
+DB_PORT=5432
 DB_NAME=voting_db
 DB_USER=postgres
 DB_PASSWORD=your_password
 
-SECRET_KEY=super_secret_key
+SECRET_KEY=my_super_secret_key_123
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=60
 ```
@@ -716,6 +769,15 @@ Screenshots after testing the API in Swagger.
 
 ## Notes
 
+The project uses a modular FastAPI architecture organized by entity. Each main domain has its own folder:
+
+- `voters`
+- `candidates`
+- `votes`
+- `auth`
+
+Each entity module contains its own router, model, schema and service. This avoids having all models, schemas and business logic in large global files.
+
 For this technical test, JWT authentication uses fixed admin credentials:
 
 ```text
@@ -733,6 +795,6 @@ In a production environment, this should be improved by adding:
 
 ---
 
-## Author VICTOR MANUEL DAVID RODRIGUEZ
+## Author
 
 Developed as a technical test for a Software Developer position.
