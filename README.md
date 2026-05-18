@@ -693,6 +693,26 @@ Swagger allows testing the endpoints directly from the browser.
 
 ---
 
+## Screenshots
+
+Screenshots after testing the API in Swagger.
+
+
+1. Swagger documentation.
+![Swagger](Swagger_Docs.png)
+2. Successful login.
+![Login](image.png)
+3. Created voter.
+![New voter](New_Voter.png)
+4. Created candidate.
+![New Candidate](New_Candidate.png)
+5. Vote cast successfully.
+![Cast a vote](image.png)
+6. Voting statistics.
+![Stats](image.png)
+
+
+---
 
 ## Notes
 
