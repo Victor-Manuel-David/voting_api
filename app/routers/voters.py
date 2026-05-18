@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app import crud, schemas
@@ -20,8 +20,22 @@ def create_voter(voter: schemas.VoterCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/", response_model=List[schemas.VoterResponse])
-def get_voters(db: Session = Depends(get_db)):
-    return crud.get_voters(db)
+def get_voters(
+    skip: int = Query(0, ge=0, description="Number of records to skip"),
+    limit: int = Query(10, ge=1, le=100, description="Maximum number of records to return"),
+    name: str | None = Query(None, description="Filter voters by name"),
+    email: str | None = Query(None, description="Filter voters by email"),
+    has_voted: bool | None = Query(None, description="Filter voters by voting status"),
+    db: Session = Depends(get_db)
+):
+    return crud.get_voters(
+        db=db,
+        skip=skip,
+        limit=limit,
+        name=name,
+        email=email,
+        has_voted=has_voted
+    )
 
 
 @router.get("/{voter_id}", response_model=schemas.VoterResponse)

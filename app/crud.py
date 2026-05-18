@@ -38,8 +38,26 @@ def create_voter(db: Session, voter: schemas.VoterCreate):
     return db_voter
 
 
-def get_voters(db: Session):
-    return db.query(models.Voter).order_by(models.Voter.id.asc()).all()
+def get_voters(
+    db: Session,
+    skip: int = 0,
+    limit: int = 10,
+    name: str | None = None,
+    email: str | None = None,
+    has_voted: bool | None = None
+):
+    query = db.query(models.Voter)
+
+    if name:
+        query = query.filter(models.Voter.name.ilike(f"%{name}%"))
+
+    if email:
+        query = query.filter(models.Voter.email.ilike(f"%{email}%"))
+
+    if has_voted is not None:
+        query = query.filter(models.Voter.has_voted == has_voted)
+
+    return query.order_by(models.Voter.id.asc()).offset(skip).limit(limit).all()
 
 
 def get_voter_by_id(db: Session, voter_id: int):
@@ -102,8 +120,22 @@ def create_candidate(db: Session, candidate: schemas.CandidateCreate):
     return db_candidate
 
 
-def get_candidates(db: Session):
-    return db.query(models.Candidate).order_by(models.Candidate.id.asc()).all()
+def get_candidates(
+    db: Session,
+    skip: int = 0,
+    limit: int = 10,
+    name: str | None = None,
+    party: str | None = None
+):
+    query = db.query(models.Candidate)
+
+    if name:
+        query = query.filter(models.Candidate.name.ilike(f"%{name}%"))
+
+    if party:
+        query = query.filter(models.Candidate.party.ilike(f"%{party}%"))
+
+    return query.order_by(models.Candidate.id.asc()).offset(skip).limit(limit).all()
 
 
 def get_candidate_by_id(db: Session, candidate_id: int):
